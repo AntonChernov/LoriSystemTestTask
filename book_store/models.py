@@ -6,6 +6,8 @@ from django.utils.text import slugify
 class BookType(models.Model):
     type_name = models.CharField(max_length=100, default="regular")
     type_price = models.DecimalField(max_digits=9, decimal_places=2, default=1.5)
+    promotional_price = models.PositiveSmallIntegerField(default=1)
+    promotional_period = models.PositiveSmallIntegerField(default=0)
 
     def __str__(self):
         return self.type_name
@@ -35,7 +37,15 @@ class RentedBook(models.Model):
     rent_days = models.PositiveSmallIntegerField()
 
     def get_item_total(self):
-        return self.book.book_type.type_price * self.rent_days
+        book_type = self.book.book_type
+        if self.rent_days < book_type.promotional_period:
+            return book_type.type_price * book_type.promotional_period
+        else:
+            item_total = book_type.promotional_price * book_type.promotional_period
+            remaining_days = self.rent_days - book_type.promotional_period
+            item_total += book_type.type_price * remaining_days
+
+        return item_total
 
     def __str__(self):
         return f"Rented book: {self.book.title} for {self.rent_days} day(s)"
