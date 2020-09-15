@@ -27,6 +27,7 @@ def cart_view(request):
 def add_to_cart_view(request):
     cart = get_cart(request)
     form = AddToCartForm(request.POST or None)
+
     if form.is_valid():
         item_slug = form.cleaned_data['item_slug']
         rent_days = form.cleaned_data['rent_days']

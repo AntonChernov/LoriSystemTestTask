@@ -3,12 +3,21 @@ from django.urls import reverse
 from django.utils.text import slugify
 
 
+class BookType(models.Model):
+    type_name = models.CharField(max_length=100, default="regular")
+    type_price = models.DecimalField(max_digits=9, decimal_places=2, default=1.5)
+
+    def __str__(self):
+        return self.type_name
+
+
 class Book(models.Model):
     title = models.CharField(max_length=100)
     author = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
     slug = models.SlugField(editable=False, unique=True)
     image = models.ImageField(upload_to='media/book_store', blank=True)
+    book_type = models.ForeignKey(BookType, on_delete=models.CASCADE, null=True, blank=True)
 
     def get_absolute_url(self):
         return reverse('detail', kwargs={'slug': self.slug})
@@ -22,13 +31,11 @@ class Book(models.Model):
 
 
 class RentedBook(models.Model):
-    RENT_PER_DAY = 1
-
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     rent_days = models.PositiveSmallIntegerField()
 
     def get_item_total(self):
-        return self.RENT_PER_DAY * self.rent_days
+        return self.book.book_type.type_price * self.rent_days
 
     def __str__(self):
         return f"Rented book: {self.book.title} for {self.rent_days} day(s)"
