@@ -1,0 +1,45 @@
+{% extends 'book_store/homepage.html' %}
+{% load static %}
+{% block content %}
+    <div class="item-detail">
+        <div class="card">
+            <div class="row">
+                <aside class="col-sm-3 border-right">
+                    <div class=" text-center">
+                        {% if book.image %}
+                            <img src="{{ book.image.url }}" height="600" width="300">
+                        {% endif %}
+                    </div>
+                </aside>
+                <aside class="col-sm-7">
+                    <article class="card-body p-5">
+                        <h3 class="title mb-3">{{ book.title }}</h3>
+
+                        <p class="price-detail-wrap">
+	<span class="price h3 text-warning">
+		<span class="currency">US $</span><span class="num">1</span>
+	</span>
+                            <span>/per day</span>
+                        </p> <!-- price-detail-wrap .// -->
+                        <dl class="item-property">
+                            <dt>Description</dt>
+                            <dd><p>{{ book.description }}</p></dd>
+                        </dl>
+                        <dl class="param param-feature">
+                            <dt>Author</dt>
+                            <dd>{{ book.author }}</dd>
+                        </dl>
+                        <hr>
+                        <form action="book/add_to_cart" method="POST">
+                            {% csrf_token %}
+                            {{ form }}
+                            <button class="btn btn-success" type="submit">Add to cart
+                            </button>
+                        </form>
+                    </article>
+                </aside>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'book_store/homepage.html' %}
+{% load static %}
+{% block content %}
+    <div class="table-responsive-sm" id="cart-items">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th class="center">#</th>
+                <th>Book</th>
+                <th>Description</th>
+                <th class="right">Price</th>
+                <th class="center">Rent days</th>
+                <th class="right">Total</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for rented_book in cart.items.all %}
+                <tr>
+                    <td class="center">{{ loop.index }}</td>
+                    <td class="left strong">{{ rented_book.book.title }}</td>
+                    <td class="left">{{ rented_book.book.description }}</td>
+                    <td class="right">${{ rented_book.RENT_PER_DAY }}</td>
+                    <td class="center">{{ rented_book.rent_days }}</td>
+                    <td class="right">${{ rented_book.get_item_total }}</td>
+                    <td class="center">
+                        <form action="cart/remove_from_cart" method="POST">
+                            {% csrf_token %}
+                            <button class="btn btn-danger" name="remove_from_cart" type="submit"
+                                    value="{{ rented_book.book.slug }}">Remove
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <strong class="float-right text-dark">Total: ${{ cart.cart_total }}</strong>
+    </div>
+{% endblock %}
