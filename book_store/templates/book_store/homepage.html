@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rent Books Online</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" type="text/css" href={% static "css/bootstrap.min.css" %}>
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" href={% static "css/homepage.css" %}>
+</head>
+<body>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="/">Rent Books Online</a>
+
+    <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav float-right">
+            <li class="nav-item">
+                <a href="/cart" class="nav-link btn btn-info btn-sm text-center">
+                    <span class="glyphicon glyphicon-shopping-cart text-center"></span>
+                    Cart
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+{% block content %}
+    <main role="main" class="container">
+        <div class="items-grid">
+
+            {% for book in books %}
+                <div class="content">
+                    <div class="card" style="width: 18rem;">
+                        <div class="text-center">
+                            {% if book.image %}
+                                <img src="{{ book.image.url }}" class="card-img-top" alt="{{ book.title }}"
+                                     width="100" height="300">
+                            {% endif %}
+
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ book.title }}</h5>
+                            <p class="card-text">{{ book.description }}</p>
+                            <a href="{{ book.get_absolute_url }}" class="stretched-link"></a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+
+    </main>
+
+    <script src='{% static "js/bootstrap.min.js" %}'></script>
+{% endblock %}
+</body>
+</html>

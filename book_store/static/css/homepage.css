@@ -1,0 +1,19 @@
+body {
+    padding-top: 5rem;
+}
+
+.items-grid {
+    display: grid;
+    grid-template-columns: 300px 300px 300px;
+    grid-gap: 50px;
+    margin: 4em;
+
+}
+
+#cart-items .item-detail{
+    margin: 5%;
+}
+
+#rent_days{
+    width: 100px;
+}
