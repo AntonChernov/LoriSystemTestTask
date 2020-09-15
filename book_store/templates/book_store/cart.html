@@ -20,7 +20,7 @@
                     <td class="center">{{ loop.index }}</td>
                     <td class="left strong">{{ rented_book.book.title }}</td>
                     <td class="left">{{ rented_book.book.description }}</td>
-                    <td class="right">${{ rented_book.RENT_PER_DAY }}</td>
+                    <td class="right">${{ rented_book.book.book_type.type_price }}</td>
                     <td class="center">{{ rented_book.rent_days }}</td>
                     <td class="right">${{ rented_book.get_item_total }}</td>
                     <td class="center">
@@ -37,4 +37,6 @@
         </table>
         <strong class="float-right text-dark">Total: ${{ cart.cart_total }}</strong>
     </div>
+
+
 {% endblock %}

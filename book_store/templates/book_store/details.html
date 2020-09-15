@@ -17,7 +17,7 @@
 
                         <p class="price-detail-wrap">
 	<span class="price h3 text-warning">
-		<span class="currency">US $</span><span class="num">1</span>
+		<span class="currency">US $</span><span class="num">{{ book.book_type.type_price }}</span>
 	</span>
                             <span>/per day</span>
                         </p> <!-- price-detail-wrap .// -->
@@ -29,8 +29,12 @@
                             <dt>Author</dt>
                             <dd>{{ book.author }}</dd>
                         </dl>
+                        <dl class="param param-feature">
+                            <dt>Type</dt>
+                            <dd>{{ book.book_type.type_name }}</dd>
+                        </dl>
                         <hr>
-                        <form action="book/add_to_cart" method="POST">
+                       <form action="book/add_to_cart" method="POST">
                             {% csrf_token %}
                             {{ form }}
                             <button class="btn btn-success" type="submit">Add to cart
@@ -41,5 +45,4 @@
             </div>
         </div>
     </div>
-
 {% endblock %}

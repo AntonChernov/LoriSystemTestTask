@@ -1,6 +1,7 @@
 from django.test import TestCase
 
 from book_store.models import (Book,
+                               BookType,
                                RentedBook,
                                Cart)
 
@@ -30,12 +31,15 @@ class BookModelTest(TestCase):
 class RentedBookTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        book = Book.objects.create(title="Harry Potter", author="J.K. Rowling", description="Simple description")
+        fiction_type = BookType.objects.create(type_name="fiction", type_price=3)
+        book = Book.objects.create(title="Harry Potter", author="J.K. Rowling",
+                                   description="Simple description",
+                                   book_type=fiction_type)
         RentedBook.objects.create(book=book, rent_days=5)
 
     def test_get_item_total(self):
         rented_book = RentedBook.objects.get(id=1)
-        self.assertEquals(rented_book.get_item_total(), 5)
+        self.assertEquals(rented_book.get_item_total(), 15)
 
     def test_object_name_is_title_and_rent_days(self):
         rented_book = RentedBook.objects.get(id=1)
@@ -46,11 +50,17 @@ class RentedBookTest(TestCase):
 class CartTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        first_book = Book.objects.create(title="Harry Potter", author="J.K. Rowling", description="Simple description")
+        regular_type = BookType.objects.create(type_name="regular", type_price=1.5)
+        fiction_type = BookType.objects.create(type_name="fiction", type_price=3)
+        first_book = Book.objects.create(title="Harry Potter", author="J.K. Rowling",
+                                         description="Simple description",
+                                         book_type=regular_type)
         second_book = Book.objects.create(title="Hunger Games", author="S. Collins",
-                                          description="Book about hunger games")
+                                          description="Book about hunger games",
+                                          book_type=fiction_type)
         RentedBook.objects.create(book=first_book, rent_days=5)
         RentedBook.objects.create(book=second_book, rent_days=7)
+
         Cart.objects.create()
 
     def test_add_to_cart(self):
@@ -60,9 +70,9 @@ class CartTest(TestCase):
         self.assertEquals(0, cart.cart_total)
         self.assertEquals(0, len(cart.items.all()))
         cart.add_to_cart(first_rented_book.book.slug, first_rented_book.rent_days)
-        self.assertEquals(5, cart.cart_total)
+        self.assertEquals(7.5, cart.cart_total)
         cart.add_to_cart(second_rented_book.book.slug, second_rented_book.rent_days)
-        self.assertEquals(12, cart.cart_total)
+        self.assertEquals(28.5, cart.cart_total)
         self.assertEquals(2, len(cart.items.all()))
 
     def test_remove_from_cart(self):
@@ -70,11 +80,11 @@ class CartTest(TestCase):
         second_rented_book = RentedBook.objects.get(id=2)
         cart = Cart.objects.get(id=1)
         cart.add_to_cart(first_rented_book.book.slug, first_rented_book.rent_days)
-        self.assertEquals(5, cart.cart_total)
+        self.assertEquals(7.5, cart.cart_total)
         cart.add_to_cart(second_rented_book.book.slug, second_rented_book.rent_days)
-        self.assertEquals(12, cart.cart_total)
+        self.assertEquals(28.5, cart.cart_total)
         cart.remove_from_cart(first_rented_book.book.slug)
-        self.assertEquals(7, cart.cart_total)
+        self.assertEquals(21, cart.cart_total)
         self.assertEquals(1, len(cart.items.all()))
         cart.remove_from_cart(second_rented_book.book.slug)
         self.assertEquals(0, cart.cart_total)
@@ -89,4 +99,4 @@ class CartTest(TestCase):
         self.assertEquals(0, cart.cart_total)
         cart.update_total_price()
         self.assertNotEquals(0, cart.cart_total)
-        self.assertEquals(5, cart.cart_total)
+        self.assertEquals(7.5, cart.cart_total)
