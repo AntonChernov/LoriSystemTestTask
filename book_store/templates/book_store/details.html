@@ -1,5 +1,6 @@
 {% extends 'book_store/homepage.html' %}
 {% load static %}
+{% block title %}{{ book.title }}{% endblock title %}
 {% block content %}
     <div class="item-detail">
         <div class="card">
@@ -33,13 +34,24 @@
                             <dt>Type</dt>
                             <dd>{{ book.book_type.type_name }}</dd>
                         </dl>
+                        {% if book.book_type.promotional_period > 0 %}
+                            <dl class="param param-feature">
+                                <dt><i>Note:</i></dt>
+                                <dd><i>If you rent this book for more than {{ book.book_type.promotional_period }} days,
+                                    you
+                                    will pay ${{ book.book_type.promotional_price }} per day
+                                    of {{ book.book_type.promotional_period }} first days.</i></dd>
+                            </dl>
+                        {% endif %}
                         <hr>
-                       <form action="book/add_to_cart" method="POST">
+                        <form action="book/add_to_cart" method="POST">
                             {% csrf_token %}
                             {{ form }}
                             <button class="btn btn-success" type="submit">Add to cart
                             </button>
                         </form>
+
+
                     </article>
                 </aside>
             </div>

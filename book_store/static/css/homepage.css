@@ -13,6 +13,9 @@ body {
 #cart-items .item-detail{
     margin: 5%;
 }
+#cart-items{
+    margin: 0 15px 0 15px;
+}
 
 #rent_days{
     width: 100px;

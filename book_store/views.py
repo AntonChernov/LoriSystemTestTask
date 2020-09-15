@@ -32,7 +32,7 @@ def add_to_cart_view(request):
         item_slug = form.cleaned_data['item_slug']
         rent_days = form.cleaned_data['rent_days']
         cart.add_to_cart(item_slug, rent_days)
-        return redirect('detail', item_slug)
+        return redirect('main')
 
 
 def remove_from_cart_view(request):
